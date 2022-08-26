@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import Main from "./components/Main";
+import Modal from "./components/Modal/";
+import { Three } from "./components/Canvas";
+
+import { Background, Body } from "./styleApp";
+import Video from "./assets/Video.mp4";
+import SearchProvider from "./contexts/SearchContext";
+import ModalProvider from "./contexts/ModalContext";
+
+
+import "./styleApp";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <SearchProvider>
+      <ModalProvider>
+        <Body>
+          <Background autoPlay loop muted>
+            <source src={Video} type="video/mp4"></source>
+          </Background>
+          <Header />
+          <Main />
+          <Modal />
+          <Three />
+          <Footer />
+        </Body>
+      </ModalProvider>
+    </SearchProvider>
   );
 }
 
