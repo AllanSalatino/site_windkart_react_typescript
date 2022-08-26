@@ -96,16 +96,10 @@ export const ModalInfo = styled.aside<ICloseModal>`
         `}
     }
     & > button {
-      position: fixed;
+      position: absolute;
       color: var(--balck);
       font-size: 25px;
-      right: 20px;
-
-      & > .icon {
-        @media (min-width: 1100px) {
-          color: black;
-        }
-      }
+      right: 0;
     }
 
     & > img {
