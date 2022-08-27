@@ -4,11 +4,15 @@ import Cards from "../Cards";
 import { List } from "./style";
 
 function CardList() {
-  const { filtredList } = useContext(SearchContext);
+  const { filtredList, kartsList } = useContext(SearchContext);
 
+  console.log(kartsList);
+  
   return (
     <List>
-      {filtredList.map((kart) => {
+      {(filtredList ? filtredList : kartsList)?.map((kart) => {
+        console.log(kart);
+        
         return <Cards key={kart.id} kart={kart}></Cards>;
       })}
     </List>

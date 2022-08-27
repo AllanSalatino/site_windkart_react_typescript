@@ -1,12 +1,15 @@
 import React, { createContext, useEffect, useState } from "react";
-import { IKarts, karts } from "../data";
+import { IKarts } from "../data";
+import { api } from "../data/api";
 
 interface IChildren {
   children: React.ReactNode;
 }
 
 interface ISearchContext {
-  filtredList: IKarts[];
+  kartsList: IKarts[] | null;
+  setKartsList: React.Dispatch<React.SetStateAction<IKarts[]>>;
+  filtredList: IKarts[] | null;
   setFiltredList: React.Dispatch<React.SetStateAction<IKarts[]>>;
   handlerList: (params?: string) => void;
   search: string;
@@ -16,15 +19,34 @@ interface ISearchContext {
 export const SearchContext = createContext({} as ISearchContext);
 
 const SearchProvider = ({ children }: IChildren) => {
-  const [filtredList, setFiltredList] = useState(karts);
-  const [search, setSearch] = useState("");
+  const [kartsList, setKartsList] = useState<IKarts[]>([]);
+  const [filtredList, setFiltredList] = useState<IKarts[]>([]);
+  const [search, setSearch] = useState<string>("");
+
+  useEffect(() => {
+    try {
+      api.get("/karts").then((res) => {
+        setKartsList(res.data);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    handlerList(search);
+  }, [search]);
+
+  useEffect(() => {
+    setFiltredList(kartsList)
+  }, [kartsList])
 
   const handlerList = (params = "todos") => {
     if (params === "todos") {
-      setFiltredList(karts);
+      setFiltredList(kartsList);
     } else if (params !== "todos") {
       setFiltredList(
-        karts.filter((kart) => {
+        kartsList?.filter((kart: IKarts) => {
           return (
             kart.type === params ||
             kart.name
@@ -63,13 +85,17 @@ const SearchProvider = ({ children }: IChildren) => {
     }
   };
 
-  useEffect(() => {
-    handlerList(search);
-  }, [search]);
-
   return (
     <SearchContext.Provider
-      value={{ filtredList, setFiltredList, handlerList, search, setSearch }}
+      value={{
+        kartsList,
+        setKartsList,
+        filtredList,
+        setFiltredList,
+        handlerList,
+        search,
+        setSearch,
+      }}
     >
       {children}
     </SearchContext.Provider>
